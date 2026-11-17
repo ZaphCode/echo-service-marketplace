@@ -11,6 +11,10 @@ export async function initChatDatabase(db: SQLiteDatabase) {
 
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
+    -- With WAL, NORMAL skips the fsync on every commit (the default, FULL,
+    -- does one per statement here since the cache writes are not batched).
+    -- Still safe against app crashes; only a power loss can drop the last writes.
+    PRAGMA synchronous = NORMAL;
     PRAGMA foreign_keys = ON;
 
     CREATE TABLE IF NOT EXISTS chat_messages (

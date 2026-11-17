@@ -83,7 +83,7 @@ export default function ServiceEditor({ route }: Props) {
       show({
         title: "No se pudo guardar",
         message:
-          "Ocurrió un error al guardar el servicio. Verifique los datos e intente de nuevo.",
+          "Ocurrió un error al guardar el servicio. Verifica los datos e intenta de nuevo.",
         icon: "database-alert",
         iconColor: colors.danger,
       });

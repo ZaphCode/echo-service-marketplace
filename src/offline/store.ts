@@ -984,6 +984,25 @@ export async function listPendingOfflineMutations() {
   );
 }
 
+/**
+ * Puts back in the queue the mutations a previous flush left in "syncing"
+ * (the app was closed mid-sync). Without this they would never be retried.
+ * Re-running one is the same as the existing retry of a "failed" mutation:
+ * creates are upserts by id and updates go through the conflict check.
+ */
+export async function requeueInterruptedOfflineMutations() {
+  const db = getChatDatabase();
+  await db.runAsync(
+    `
+      UPDATE offline_mutation_queue
+      SET status = 'pending',
+          updated_at = ?
+      WHERE status = 'syncing'
+    `,
+    nowIso()
+  );
+}
+
 export async function countPendingOfflineMutations() {
   const db = getChatDatabase();
   const row = await db.getFirstAsync<{ pending_count: number }>(

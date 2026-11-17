@@ -119,7 +119,7 @@ export default function ContractingEditor({ route }: Props) {
       show({
         title: "No se pudo guardar",
         message:
-          "Ocurrió un error al guardar la contratación. Verifique los datos e intente de nuevo.",
+          "Ocurrió un error al guardar la contratación. Verifica los datos e intenta de nuevo.",
         icon: "database-alert",
         iconColor: colors.danger,
       });

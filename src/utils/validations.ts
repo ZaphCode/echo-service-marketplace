@@ -15,7 +15,11 @@ export const validDateRules: RegisterOptions = {
 
     if (isNaN(date.getTime())) return "La fecha no es válida";
 
-    if (date < new Date()) return "La fecha no puede ser anterior a hoy";
+    // Compare by day: the picker returns today's date with the time it was
+    // opened, which is already "in the past" by the time the form is sent.
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    if (date < startOfToday) return "La fecha no puede ser anterior a hoy";
 
     return true;
   },
@@ -80,7 +84,9 @@ export const validNameRules: RegisterOptions = {
     message: "El nombre no puede tener más de 60 caracteres",
   },
   pattern: {
-    value: /^[a-zA-Z\s]+$/,
+    // Letters including accents, ñ and ü (José, Muñoz, Agúndez), plus the
+    // separators real names use: spaces, apostrophes, hyphens and periods.
+    value: /^[a-zA-ZÀ-ÖØ-öø-ÿ\s'.-]+$/,
     message: "El nombre solo puede contener letras y espacios",
   },
 };

@@ -53,7 +53,7 @@ export default function EditProviderInfoView({
         experience_years: parseInt(data.experience_years),
       });
       show({
-        title: "Perfil Actualizado",
+        title: "Perfil actualizado",
         message: isOnline
           ? "Tu perfil profesional se actualizó exitosamente."
           : "Tu perfil profesional se guardó localmente y se sincronizará al reconectar.",
@@ -63,7 +63,7 @@ export default function EditProviderInfoView({
       onSuccess?.(result);
     } catch {
       return show({
-        title: "Error al Guardar",
+        title: "No se pudo guardar",
         message:
           "Ocurrió un error al guardar los cambios en tu perfil. Inténtalo de nuevo.",
         icon: "alert-circle",

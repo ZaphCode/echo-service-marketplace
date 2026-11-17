@@ -59,9 +59,14 @@ export default function Notifications() {
     const unreadIds = notifications.filter((item) => !item.read).map((item) => item.id);
     if (!notificationsQuery.isSuccess || unreadIds.length === 0) return;
 
-    Promise.all(unreadIds.map((id) => markAsRead(id))).then(() =>
-      queryClient.invalidateQueries({ queryKey: notificationsKeys.unreadCount(user.id) }),
-    );
+    Promise.all(unreadIds.map((id) => markAsRead(id)))
+      .then(() =>
+        queryClient.invalidateQueries({ queryKey: notificationsKeys.unreadCount(user.id) }),
+      )
+      .catch((error) => {
+        // Best effort: they stay unread and are retried on the next visit.
+        console.log("[notifications] Marking as read failed:", error);
+      });
   }, [markAsRead, notifications, notificationsQuery.isSuccess, queryClient, user.id]);
 
   if (notificationsQuery.isPending) {

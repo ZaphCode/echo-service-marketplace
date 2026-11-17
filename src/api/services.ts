@@ -101,7 +101,12 @@ export async function searchServices(search: string) {
     return searchCachedServices(search);
   }
 
-  const normalizedSearch = search.trim();
+  // `,` `(` `)` separate conditions inside .or(), and `%` `*` `\` are
+  // wildcards/escapes: left as-is, a search like "pintura, baños" fails.
+  const normalizedSearch = search
+    .replace(/[,()%*\\"]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   try {
     const { data, error } = await supabase
       .from("service")

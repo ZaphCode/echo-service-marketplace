@@ -59,9 +59,9 @@ export default function Privacy() {
     } catch (e) {
       console.log(e);
       show({
-        title: "Error al descargar",
+        title: "No se pudo descargar",
         message:
-          "Hubo un problema al descargar el PDF. Asegúrate que tienes conexión o intenta más tarde.",
+          "Hubo un problema al descargar el PDF. Asegúrate de tener conexión o intenta más tarde.",
         icon: "alert",
         iconColor: colors.danger,
       });

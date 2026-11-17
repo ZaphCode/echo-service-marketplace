@@ -204,7 +204,9 @@ export async function getServiceRequestById(requestId: string) {
   }
 
   try {
-    return getRemoteServiceRequestById(requestId);
+    // `await` is required: without it a rejection skips this catch block and
+    // the cached copy is never used.
+    return await getRemoteServiceRequestById(requestId);
   } catch (error) {
     const cached = await getCachedServiceRequest(requestId);
     if (cached) return cached;

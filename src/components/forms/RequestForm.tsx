@@ -150,8 +150,8 @@ export default function RequestForm({
         }
       } catch {
         return show({
-          title: "Error al Ofertar",
-          message: "No se pudo enviar tu oferta. Intente nuevamente.",
+          title: "No pudimos enviar tu oferta",
+          message: "Revisa tu conexión e intenta de nuevo.",
           icon: "alert-circle",
           iconColor: colors.danger,
         });
@@ -188,8 +188,8 @@ export default function RequestForm({
         });
       } catch {
         return show({
-          title: "Error al Solicitar Servicio",
-          message: "No se pudo enviar tu solicitud. Intente nuevamente.",
+          title: "No pudimos enviar tu solicitud",
+          message: "Revisa tu conexión e intenta de nuevo.",
           icon: "alert-circle",
           iconColor: colors.danger,
         });

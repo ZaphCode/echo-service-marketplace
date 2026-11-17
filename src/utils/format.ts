@@ -56,7 +56,10 @@ function formatRelativeUnit(
   unitLabel: string,
 ) {
   const value = Math.max(1, Math.trunc(Math.abs(diffMs) / unitMs));
-  const pluralSuffix = value === 1 ? "" : unitLabel === "mes" ? "es" : "s";
+  // "min" and "h" are abbreviations and never take a plural ("5 min", "3 h").
+  const isAbbreviation = unitLabel === "min" || unitLabel === "h";
+  const pluralSuffix =
+    value === 1 || isAbbreviation ? "" : unitLabel === "mes" ? "es" : "s";
   const prefix = diffMs <= 0 ? "Hace" : "En";
 
   return `${prefix} ${value} ${unitLabel}${pluralSuffix}`;

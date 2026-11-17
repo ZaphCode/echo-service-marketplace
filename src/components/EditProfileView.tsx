@@ -61,7 +61,7 @@ export default function EditProfileView({
     try {
       const result = await profileMutation.mutateAsync({ ...data } as typeof profile);
       show({
-        title: "Perfil Actualizado",
+        title: "Perfil actualizado",
         message: isOnline
           ? "Tus datos se actualizaron exitosamente."
           : "Tus datos se guardaron localmente y se sincronizarán al reconectar.",
@@ -71,7 +71,7 @@ export default function EditProfileView({
       onSuccess?.(result);
     } catch {
       return show({
-        title: "Error al Guardar",
+        title: "No se pudo guardar",
         message:
           "Ocurrió un error al guardar los cambios en tu perfil. Inténtalo de nuevo.",
         icon: "alert-circle",

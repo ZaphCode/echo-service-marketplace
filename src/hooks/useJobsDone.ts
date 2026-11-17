@@ -8,7 +8,7 @@ export default function useJobsDone(provider: User) {
 
     const result = await finalizeRequestCompletion(requestId).catch(() => null);
 
-    if (!result) return console.error("Failed to update jobs done count");
+    if (!result) console.log("Failed to update jobs done count");
   }
 
   return { addJob };

@@ -35,15 +35,24 @@ export default function ChatInput() {
     const timestamp = new Date().toISOString();
     const randomSuffix = Math.random().toString(36).slice(2, 10);
 
-    await insertPendingMessage({
-      localId: `local:${timestamp}:${randomSuffix}`,
-      clientId: `client:${user.id}:${timestamp}:${randomSuffix}`,
-      requestId: request.id,
-      senderId: user.id,
-      content,
-      createdAtClient: timestamp,
-    });
+    // Clear first so a quick second tap cannot send the same text twice.
     setMessage("");
+
+    try {
+      await insertPendingMessage({
+        localId: `local:${timestamp}:${randomSuffix}`,
+        clientId: `client:${user.id}:${timestamp}:${randomSuffix}`,
+        requestId: request.id,
+        senderId: user.id,
+        content,
+        createdAtClient: timestamp,
+      });
+    } catch (error) {
+      console.log("[chat] Saving the message locally failed:", error);
+      // Give the text back, unless the user already started typing again.
+      setMessage((current) => current || content);
+      return;
+    }
 
     await queryClient.invalidateQueries({ queryKey: chatMessagesKeys.byRequest(request.id) });
     await flushPendingMessages();

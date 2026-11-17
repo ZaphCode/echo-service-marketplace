@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
@@ -13,6 +13,10 @@ export default function useSubscription<T>(
   track: string,
   callback: SubscriptionCallback<T>,
 ) {
+  // Always call the latest callback without re-subscribing on every render.
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+
   useEffect(() => {
     const channel = supabase
       .channel(`${collection}_${track}`)
@@ -31,10 +35,16 @@ export default function useSubscription<T>(
                 ? "UPDATE"
                 : "DELETE";
 
-          callback({
-            action,
-            record: (payload.new || {}) as T,
-            old_record: (payload.old || undefined) as T | undefined,
+          // The callback usually refetches; a failed refetch must not surface
+          // as an unhandled promise rejection.
+          Promise.resolve(
+            callbackRef.current({
+              action,
+              record: (payload.new || {}) as T,
+              old_record: (payload.old || undefined) as T | undefined,
+            }),
+          ).catch((error) => {
+            console.log(`[realtime] ${collection} handler failed:`, error);
           });
         },
       )

@@ -124,7 +124,7 @@ export default function ContractingOverview({ route }: Props) {
             <View style={styles.meta}>
               <Feather name="map-pin" size={13} color={colors.textSubtle} />
               <Text variant="label" tone="subtle">
-                {`A ${distance}`}
+                {distance.charAt(0).toUpperCase() + distance.slice(1)}
               </Text>
             </View>
           ) : null}

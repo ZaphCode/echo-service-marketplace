@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { User } from "@/models/User";
 import {
@@ -8,6 +8,13 @@ import {
 import { verifyOfflineCredential } from "@/offline/auth";
 import { getProfileByUser } from "@/api/profiles";
 import { reconcileLocalDataWithServer } from "@/offline/reset";
+import { withTimeout } from "@/utils/async";
+
+/** Longest the splash waits for the network before showing the app. */
+const STARTUP_BUDGET_MS = 6000;
+const MIN_SESSION_WAIT_MS = 1500;
+const PROFILE_TIMEOUT_MS = 8000;
+const SESSION_PENDING = Symbol("session-pending");
 
 const initialUser: User = {
   id: "",
@@ -19,6 +26,18 @@ const initialUser: User = {
   avatar: "",
   email_visibility: false,
   verified: false,
+};
+
+type AuthData = {
+  user: User;
+  authenticated: boolean;
+  authMode: "online" | "offline";
+};
+
+const signedOutAuth: AuthData = {
+  user: initialUser,
+  authenticated: false,
+  authMode: "offline",
 };
 
 type AuthContextType = {
@@ -33,73 +52,141 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authData, setAuthData] = useState({
-    user: initialUser,
-    authenticated: false,
-    authMode: "offline" as "online" | "offline",
-  });
+  const [authData, setAuthData] = useState<AuthData>(signedOutAuth);
+  // Mirror of authData readable from the auth listener (which is created once).
+  const authRef = useRef<AuthData>(signedOutAuth);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Wipe stale local data first if the server was reset, then restore the
-    // session (which may have just been cleared).
-    reconcileLocalDataWithServer()
-      .then(() => supabase.auth.getSession())
-      .then(async ({ data: { session } }) => {
-      if (session?.user) {
-        const profile = await fetchProfile(session.user.id);
-        if (profile) {
-          await cacheAuthUser(profile, true);
-          await cacheProfileDetailsBestEffort(profile);
-          setAuthData({
-            user: profile,
-            authenticated: true,
-            authMode: "online",
-          });
-        } else {
-          const cachedProfile = await getCachedAuthUserById(session.user.id);
-          if (cachedProfile) {
-            setAuthData({
-              user: cachedProfile,
-              authenticated: true,
-              authMode: "offline",
-            });
-          }
-        }
-      }
-      setLoading(false);
-    });
+    let active = true;
+    // User of the most recent auth event. A slow profile fetch started by an
+    // older event must not overwrite a newer state (e.g. after signing out).
+    let latestUserId: string | null = null;
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        const profile = await fetchProfile(session.user.id);
-        if (profile) {
-          await cacheAuthUser(profile, true);
-          await cacheProfileDetailsBestEffort(profile);
-          setAuthData({
-            user: profile,
-            authenticated: true,
-            authMode: "online",
-          });
-        }
-      } else {
-        setAuthData({
-          user: initialUser,
-          authenticated: false,
+    const applyAuth = (next: AuthData) => {
+      authRef.current = next;
+      setAuthData(next);
+    };
+
+    const applyOnlineProfile = async (userId: string) => {
+      const profile = await withTimeout(
+        fetchProfile(userId),
+        PROFILE_TIMEOUT_MS,
+        null
+      );
+      if (!profile) return null;
+
+      await cacheAuthUser(profile, true);
+      // Only warms the offline cache: never block the UI on it.
+      cacheProfileDetailsBestEffort(profile);
+
+      if (active && latestUserId === userId) {
+        applyAuth({ user: profile, authenticated: true, authMode: "online" });
+      }
+      return profile;
+    };
+
+    const restoreSession = async (userId: string) => {
+      latestUserId = userId;
+      const profile = await applyOnlineProfile(userId);
+      if (profile) return;
+
+      const cachedProfile = await getCachedAuthUserById(userId);
+      if (cachedProfile && active && latestUserId === userId) {
+        applyAuth({
+          user: cachedProfile,
+          authenticated: true,
           authMode: "offline",
         });
       }
+    };
+
+    const start = async () => {
+      const deadline = Date.now() + STARTUP_BUDGET_MS;
+
+      try {
+        // Wipe stale local data first if the server was reset, then restore
+        // the session (which may have just been cleared).
+        await reconcileLocalDataWithServer();
+
+        // While offline with an expired token the auth client retries the
+        // refresh for ~30 s before answering. Don't keep the splash up that
+        // long: continue without a session and pick it up if it arrives.
+        const sessionPromise = supabase.auth
+          .getSession()
+          .then(({ data }) => data.session?.user?.id ?? null);
+        const userId = await withTimeout(
+          sessionPromise,
+          Math.max(deadline - Date.now(), MIN_SESSION_WAIT_MS),
+          SESSION_PENDING
+        );
+
+        if (userId === SESSION_PENDING) {
+          sessionPromise
+            .then((lateUserId) => {
+              if (lateUserId && active && !authRef.current.authenticated) {
+                return restoreSession(lateUserId);
+              }
+            })
+            .catch(() => {});
+          return;
+        }
+
+        if (userId) await restoreSession(userId);
+      } catch (error) {
+        console.log("[auth] Session restore failed:", error);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    start();
+
+    // IMPORTANT: this callback runs while the auth client holds its internal
+    // lock. Awaiting any Supabase call here (even a plain query, which needs
+    // the session) deadlocks the client: every later request hangs forever.
+    // So it stays synchronous and defers the real work with setTimeout.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // The initial session is restored by start() above.
+      if (event === "INITIAL_SESSION") return;
+
+      const userId = session?.user?.id ?? null;
+
+      if (!userId) {
+        latestUserId = null;
+        applyAuth(signedOutAuth);
+        return;
+      }
+
+      // A background refresh must not sign a user back in after they logged
+      // out while offline (the client keeps that session in memory).
+      if (event === "TOKEN_REFRESHED" && !authRef.current.authenticated) {
+        return;
+      }
+
+      latestUserId = userId;
+      setTimeout(() => {
+        applyOnlineProfile(userId).catch((error) => {
+          console.log("[auth] Profile refresh failed:", error);
+        });
+      }, 0);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (user: User, mode: "online" | "offline" = "online") => {
-    cacheAuthUser(user, mode === "online");
-    setAuthData({ user, authenticated: true, authMode: mode });
+    cacheAuthUser(user, mode === "online").catch((error) => {
+      console.log("[auth] Caching the signed-in user failed:", error);
+    });
+    const next: AuthData = { user, authenticated: true, authMode: mode };
+    authRef.current = next;
+    setAuthData(next);
   };
 
   const offlineLogin = async (email: string, password: string) => {
@@ -110,12 +197,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return true;
   };
 
-  const logout = () =>
-    setAuthData({
-      user: initialUser,
-      authenticated: false,
-      authMode: "offline",
-    });
+  const logout = () => {
+    authRef.current = signedOutAuth;
+    setAuthData(signedOutAuth);
+  };
 
   if (loading) return null; // Or a splash screen
 

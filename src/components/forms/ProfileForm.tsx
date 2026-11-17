@@ -20,7 +20,7 @@ export default function ProfileForm({ submitBtnLabel, control, onContinue, loadi
         control={control}
         label="Teléfono"
         icon="phone"
-        placeholder="+52 123 456 7890"
+        placeholder="+52 612 123 4567"
         keyboardType="phone-pad"
         rules={rules.validPhoneRules}
       />
@@ -34,20 +34,20 @@ export default function ProfileForm({ submitBtnLabel, control, onContinue, loadi
       />
       <View style={styles.row}>
         <View style={styles.flex}>
-          <Field name="city" control={control} label="Ciudad" placeholder="Mérida" autoCapitalize="words" />
+          <Field name="city" control={control} label="Ciudad" placeholder="La Paz" autoCapitalize="words" />
         </View>
         <View style={styles.zip}>
           <Field
             name="zip"
             control={control}
             label="C.P."
-            placeholder="97000"
+            placeholder="23000"
             keyboardType="numeric"
             rules={rules.validZipCodeRules}
           />
         </View>
       </View>
-      <Field name="state" control={control} label="Estado" placeholder="Yucatán" autoCapitalize="words" />
+      <Field name="state" control={control} label="Estado" placeholder="Baja California Sur" autoCapitalize="words" />
       <Button title={submitBtnLabel} onPress={onContinue} loading={loading} style={styles.submit} />
     </View>
   );

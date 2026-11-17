@@ -3,6 +3,7 @@ import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 
 import { getChatDatabase } from "@/chat/db";
 import { SUPABASE_AUTH_STORAGE_KEY, supabase } from "@/lib/supabase";
+import { withTimeout } from "@/utils/async";
 import { decideLocalReset, isDeletedUserAuthError } from "@/utils/localReset";
 
 const EPOCH_KEY = "data_epoch";
@@ -96,10 +97,13 @@ export async function wipeLocalData() {
  */
 export async function reconcileLocalDataWithServer() {
   try {
+    // Both server checks first wait for the auth client to initialise, which
+    // can take ~30 s offline with an expired token (the abort signal above only
+    // covers the request itself). Bound the wait: no answer means "keep".
     const [localEpoch, serverEpoch, sessionUserMissing] = await Promise.all([
       readLocalEpoch(),
-      fetchServerEpoch(),
-      isSessionUserMissing(),
+      withTimeout(fetchServerEpoch(), SERVER_TIMEOUT_MS, null),
+      withTimeout(isSessionUserMissing(), SERVER_TIMEOUT_MS, false),
     ]);
 
     const decision = decideLocalReset({

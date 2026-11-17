@@ -54,6 +54,16 @@ describe("validaciones de formularios", () => {
 
     expect(validate("2099-12-31")).toBe(true);
     expect(validate("fecha-inválida")).toBe("La fecha no es válida");
+
+    // Hoy es válido aunque la hora elegida ya haya pasado.
+    const earlierToday = new Date();
+    earlierToday.setHours(0, 0, 1, 0);
+    expect(validate(earlierToday.toISOString())).toBe(true);
+
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    expect(validate(yesterday.toISOString())).toBe(
+      "La fecha no puede ser anterior a hoy"
+    );
   });
 
   test("valida nombres y códigos postales", () => {
@@ -61,7 +71,8 @@ describe("validaciones de formularios", () => {
     const zipPattern = validZipCodeRules.pattern as { value: RegExp };
 
     expect(namePattern.value.test("Maria Lopez")).toBe(true);
-    expect(namePattern.value.test("María López")).toBe(false);
+    expect(namePattern.value.test("María López")).toBe(true);
+    expect(namePattern.value.test("José Ángel Muñoz-Agúndez")).toBe(true);
     expect(namePattern.value.test("Usuario123")).toBe(false);
     expect(zipPattern.value.test("80000")).toBe(true);
     expect(zipPattern.value.test("8000")).toBe(false);

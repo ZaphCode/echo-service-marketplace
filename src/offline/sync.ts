@@ -31,6 +31,7 @@ import {
   cacheServices,
   listPendingOfflineMutations,
   markOfflineMutationStatus,
+  requeueInterruptedOfflineMutations,
   OfflineMutation,
   updateCachedProfileAvatar,
 } from "./store";
@@ -77,6 +78,10 @@ export async function flushOfflineMutations({
   queryClient,
 }: SyncOptions) {
   if (!isOnline) return;
+
+  // Flushes never overlap (see OfflineProvider.syncNow), so anything still
+  // marked "syncing" belongs to a run that was interrupted (app killed).
+  await requeueInterruptedOfflineMutations();
 
   const mutations = await listPendingOfflineMutations();
   const touchedRequestUserIds = new Set<string>();

@@ -2,7 +2,7 @@
   "expo": {
     "name": "echo-app",
     "slug": "echo-app",
-    "version": "3.0",
+    "version": "3.0.1",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "userInterfaceStyle": "automatic",
@@ -46,8 +46,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "La aplicación accede a tus fotos para permitirte compartirlas con tus amigos.",
-          "cameraPermission": "La aplicación accede a tu cámara para permitirte tomar fotos y compartirlas con tus amigos.",
+          "photosPermission": "Echo usa tus fotos para tu foto de perfil y para las imágenes de los servicios y contrataciones que publiques.",
+          "cameraPermission": "Echo usa tu cámara para tomar tu foto de perfil y las fotos de los servicios y contrataciones que publiques.",
           "microphonePermission": "La aplicación accede a tu micrófono para permitirte grabar videos con sonido."
         }
       ],

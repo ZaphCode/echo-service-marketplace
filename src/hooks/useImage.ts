@@ -8,22 +8,24 @@ export default function useImage() {
     opt: ImagePicker.ImagePickerOptions
   ) => {
     setLoading(true);
-    if (from === "library") {
-      const permission =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permission.granted) throw new Error("Permiso denegado");
-      const result = await ImagePicker.launchImageLibraryAsync(opt);
-      setLoading(false);
-      return result;
-    } else if (from === "camera") {
-      const permission = await ImagePicker.requestCameraPermissionsAsync();
-      if (!permission.granted) throw new Error("Permiso de cámara denegado");
-      const result = await ImagePicker.launchCameraAsync(opt);
-      setLoading(false);
-      return result;
-    } else {
-      setLoading(false);
+    try {
+      if (from === "library") {
+        const permission =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permission.granted) throw new Error("Permiso denegado");
+        return await ImagePicker.launchImageLibraryAsync(opt);
+      }
+
+      if (from === "camera") {
+        const permission = await ImagePicker.requestCameraPermissionsAsync();
+        if (!permission.granted) throw new Error("Permiso de cámara denegado");
+        return await ImagePicker.launchCameraAsync(opt);
+      }
+
       throw new Error("Opción no válida");
+    } finally {
+      // Also runs when permission is denied or the picker throws.
+      setLoading(false);
     }
   };
   return { pickImage, loading };

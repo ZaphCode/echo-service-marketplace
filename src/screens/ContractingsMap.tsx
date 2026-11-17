@@ -30,8 +30,9 @@ import {
   MapBounds,
 } from "@/utils/geo";
 
-// Mexico City, only used when neither the device nor the profile has a point.
-const FALLBACK_CENTER: Coords = { lat: 19.4326, lon: -99.1332 };
+// La Paz, B.C.S. (where the demo data lives); only used when neither the
+// device nor the profile has a point.
+const FALLBACK_CENTER: Coords = { lat: 24.1426, lon: -110.3128 };
 const INITIAL_ZOOM = 12;
 const INITIAL_DELTA = { lat: 0.12, lon: 0.08 };
 const REGION_DEBOUNCE_MS = 400;
