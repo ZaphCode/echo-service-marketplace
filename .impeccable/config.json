@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "site/index.html"
+        ],
+        "createdAt": "2026-11-17T03:08:32.431Z",
+        "reason": "Claude decided: the download button mirrors the app's own accentGlow button token (src/theme/theme.ts), kept for brand consistency"
+      }
+    ]
+  }
+}

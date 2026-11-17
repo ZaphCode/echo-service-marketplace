@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo · Servicios del hogar en Baja California Sur</title>
+<meta name="description" content="Echo conecta a clientes y profesionales de servicios técnicos y del hogar en Baja California Sur. Descarga la app para Android.">
+<meta name="theme-color" content="#0E0F11">
+<meta property="og:title" content="Echo · Servicios del hogar en B.C.S.">
+<meta property="og:description" content="Encuentra plomeros, electricistas y más profesionales cerca de ti. Negocia precio y fecha en un chat.">
+<meta property="og:image" content="https://zaphcode.github.io/echo-service-marketplace/img/inicio.jpg">
+<link rel="icon" href="img/icon.png">
+<style>
+@font-face { font-family: Geist; src: url(fonts/Geist-Regular.ttf); font-weight: 400; font-display: swap; }
+@font-face { font-family: Geist; src: url(fonts/Geist-Bold.ttf); font-weight: 700; font-display: swap; }
+
+:root {
+  --bg: #0E0F11; --surface: #18191C; --surface2: #222327;
+  --line: rgba(255,255,255,.07); --line-strong: rgba(255,255,255,.14);
+  --text: #F4F5F7; --muted: #A9ACB3; --subtle: #868A92;
+  --accent: #3E8CFD; --accent-text: #7DB3FF; --accent-soft: rgba(62,140,253,.16);
+  --success: #3DD598; --warn: #F2B544; --done: #BC98FF;
+}
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 400 17px/1.55 Geist, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--accent-text); }
+.wrap { width: min(1080px, 100%); margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-weight: 700; line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 7vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 4.4vw, 2.3rem); }
+h3 { font-size: 1.15rem; letter-spacing: -.01em; }
+p { text-wrap: pretty; }
+.muted { color: var(--muted); }
+.eyebrow { color: var(--accent-text); font-weight: 700; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+
+/* ---------- header */
+header { padding: 22px 0; }
+header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+header img { height: 30px; width: auto; }
+.tag { font-size: .8rem; color: var(--muted); border: 1px solid var(--line-strong); padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+
+/* ---------- hero */
+.hero { position: relative; padding: 28px 0 64px; }
+.rings { position: absolute; inset: -200px 0 auto 50%; width: 900px; height: 900px; transform: translateX(-10%); pointer-events: none; z-index: -1;
+  background: repeating-radial-gradient(circle at center, transparent 0 78px, rgba(62,140,253,.13) 78px 79.5px);
+  -webkit-mask-image: radial-gradient(circle at center, #000 0, transparent 68%); mask-image: radial-gradient(circle at center, #000 0, transparent 68%); }
+.hero .wrap { display: grid; gap: 44px; align-items: center; }
+.hero-copy { display: grid; gap: 20px; justify-items: start; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 34ch; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; width: 100%; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 58px; padding: 0 28px; border-radius: 999px; font: 700 1.2rem Geist, system-ui, sans-serif;
+  text-decoration: none; background: var(--accent); color: #fff;
+  box-shadow: 0 14px 40px -12px rgba(62,140,253,.75); transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 18px 46px -12px rgba(62,140,253,.9); }
+.btn:active { transform: scale(.98); }
+.btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; }
+.btn svg { width: 22px; height: 22px; }
+.meta { font-size: .9rem; color: var(--subtle); }
+.ios-note { display: none; background: rgba(242,181,68,.12); color: var(--warn); border-radius: 16px; padding: 12px 16px; font-size: .95rem; }
+.is-ios .ios-note { display: block; }
+
+.qr-card { display: none; }
+.phones { display: flex; justify-content: center; align-items: flex-start; gap: 14px; }
+.phone { width: min(46%, 250px); border-radius: 34px; border: 1px solid var(--line-strong); background: var(--surface); padding: 7px; box-shadow: 0 40px 80px -30px #000; }
+.phone img { border-radius: 28px; width: 100%; height: auto; }
+.phone:nth-child(2) { margin-top: 44px; }
+
+/* ---------- sections */
+section { padding: 56px 0; }
+.section-head { display: grid; gap: 12px; margin-bottom: 30px; max-width: 46ch; }
+.grid { display: grid; gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 24px; display: grid; gap: 10px; align-content: start; }
+.card p { color: var(--muted); font-size: .98rem; }
+.with-icon { display: flex; align-items: center; gap: 10px; }
+.with-icon svg { width: 22px; height: 22px; flex: none; color: var(--accent-text); }
+.two .card { padding: 28px; }
+.pill { justify-self: start; font-size: .78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; }
+.pill.blue { background: var(--accent-soft); color: var(--accent-text); }
+.pill.green { background: rgba(61,213,152,.14); color: var(--success); }
+
+.shots { display: flex; gap: 14px; overflow-x: auto; padding: 4px 20px 18px; margin: 0 -20px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.shots::-webkit-scrollbar { display: none; }
+.shots figure { flex: 0 0 62%; max-width: 250px; scroll-snap-align: center; display: grid; gap: 10px; }
+.shots img { border-radius: 26px; border: 1px solid var(--line-strong); width: 100%; height: auto; }
+.shots figcaption { font-size: .88rem; color: var(--subtle); text-align: center; }
+
+.steps { counter-reset: step; display: grid; gap: 12px; padding: 0; list-style: none; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 42px 1fr; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 18px 20px; }
+.steps li::before { content: counter(step); width: 42px; height: 42px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-text); font-weight: 700; display: grid; place-items: center; }
+.steps strong { display: block; }
+.steps span { color: var(--muted); font-size: .96rem; }
+
+.stack { display: flex; flex-wrap: wrap; gap: 8px; }
+.stack span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font-size: .9rem; color: var(--muted); }
+
+.final { text-align: center; }
+.final .card { justify-items: center; padding: 40px 24px; gap: 16px; background: linear-gradient(180deg, rgba(62,140,253,.14), var(--surface) 70%); }
+
+footer { border-top: 1px solid var(--line); padding: 30px 0 44px; color: var(--subtle); font-size: .9rem; }
+footer .wrap { display: grid; gap: 8px; }
+
+@media (min-width: 720px) {
+  .grid.two { grid-template-columns: 1fr 1fr; }
+  .grid.four { grid-template-columns: 1fr 1fr; }
+  .shots { justify-content: center; overflow: visible; }
+  .shots figure { flex: 0 1 230px; }
+}
+@media (min-width: 940px) {
+  .hero { padding: 48px 0 90px; }
+  .hero .wrap { grid-template-columns: 1.05fr .95fr; }
+  .grid.four { grid-template-columns: repeat(4, 1fr); }
+  .qr-card { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 14px 20px 14px 14px; }
+  .qr-card img { width: 108px; height: 108px; border-radius: 12px; }
+  .qr-card p { font-size: .92rem; color: var(--muted); max-width: 22ch; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <img src="img/echo-white.png" alt="Echo" width="560" height="198">
+    <span class="tag">Proyecto universitario</span>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="rings" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-copy">
+        <h1>El profesional que necesitas, a un mensaje de distancia.</h1>
+        <p class="lead">Echo conecta a quien necesita un plomero, electricista o técnico con profesionales independientes de La Paz y Los Cabos.</p>
+        <p class="ios-note">Estás en un iPhone: la descarga es solo para Android. Pide que te mostremos la app en el stand.</p>
+        <div class="cta-row">
+          <a class="btn" href="https://github.com/ZaphCode/echo-service-marketplace/releases/latest/download/echo.apk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            Descargar para Android
+          </a>
+        </div>
+        <p class="meta">APK · versión 3.0 · 98 MB · Android 7 o superior</p>
+        <div class="qr-card">
+          <img src="img/qr.svg" alt="Código QR de esta página" width="108" height="108">
+          <p>¿Estás en una computadora? Escanea el código con tu teléfono Android.</p>
+        </div>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <div class="phone"><img src="img/inicio.jpg" alt="" width="600" height="1304"></div>
+        <div class="phone"><img src="img/chat.jpg" alt="" width="600" height="1304"></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">El problema</p>
+        <h2>Hoy se resuelve por recomendación o en grupos de Facebook.</h2>
+        <p class="muted">Para quien contrata es difícil comparar precios y saber si el trabajo es confiable. Para el profesional, conseguir clientes de forma constante.</p>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <span class="pill blue">Servicios</span>
+          <h3>El profesional publica lo que ofrece</h3>
+          <p>Fotos, descripción y un precio base. El cliente lo encuentra por categoría o cercanía y le envía una solicitud.</p>
+        </div>
+        <div class="card">
+          <span class="pill green">Contrataciones</span>
+          <h3>El cliente publica lo que necesita</h3>
+          <p>Fotos, presupuesto y una zona aproximada en el mapa. Los profesionales interesados aplican con su cotización.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2>Del primer mensaje a la reseña, en un solo lugar.</h2>
+      </div>
+      <div class="grid four">
+        <div class="card">
+          <h3 class="with-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Chat con negociación</h3>
+          <p>Cada solicitud abre un chat con un panel de precio y fecha. El trato se cierra solo cuando ambos aceptan.</p>
+        </div>
+        <div class="card">
+          <h3 class="with-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M8.5 8.6A5 5 0 0 0 7 17h10m3-2.3A4.5 4.5 0 0 0 16.5 9h-1.3A7 7 0 0 0 11 5.1"/></svg>Funciona sin conexión</h3>
+          <p>Los datos se guardan en el teléfono. Puedes escribir y hacer cambios sin señal; se sincronizan al reconectar.</p>
+        </div>
+        <div class="card">
+          <h3 class="with-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.900 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Mapa con privacidad</h3>
+          <p>Ves primero lo más cercano, pero el mapa solo muestra una zona de unos 500 m, nunca la dirección exacta.</p>
+        </div>
+        <div class="card">
+          <h3 class="with-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z"/></svg>Reseñas reales</h3>
+          <p>Al terminar el trabajo, cliente y profesional se califican de 1 a 5 estrellas. Solo opina quien cerró un trato.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">La app</p>
+        <h2>Así se ve.</h2>
+      </div>
+      <div class="shots">
+        <figure><img src="img/acceso.jpg" alt="Pantalla de inicio de sesión de Echo" width="600" height="1304" loading="lazy"><figcaption>Acceso</figcaption></figure>
+        <figure><img src="img/inicio.jpg" alt="Inicio con categorías y servicios cercanos" width="600" height="1304" loading="lazy"><figcaption>Inicio</figcaption></figure>
+        <figure><img src="img/solicitudes.jpg" alt="Lista de solicitudes con su estado" width="600" height="1304" loading="lazy"><figcaption>Solicitudes</figcaption></figure>
+        <figure><img src="img/chat.jpg" alt="Chat con el panel de negociación de precio y fecha" width="600" height="1304" loading="lazy"><figcaption>Negociación</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="instalar">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Instalación</p>
+        <h2>Instálala en un minuto.</h2>
+        <p class="muted">Echo no está en Play Store, así que Android te pedirá confirmar un par de cosas. Es normal.</p>
+      </div>
+      <ol class="steps">
+        <li><div><strong>Descarga el archivo</strong><span>Toca “Descargar para Android”. Si el navegador avisa que el archivo puede ser dañino, elige “Descargar de todos modos”.</span></div></li>
+        <li><div><strong>Abre <code>echo.apk</code></strong><span>Desde la notificación de descarga o desde la carpeta Descargas.</span></div></li>
+        <li><div><strong>Permite la instalación</strong><span>Android pedirá permitir apps de esta fuente: toca “Configuración”, activa el permiso y vuelve atrás.</span></div></li>
+        <li><div><strong>Instala y crea tu cuenta</strong><span>Si Play Protect pregunta, elige “Instalar de todas formas”. Luego regístrate como cliente o profesional.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Por dentro</p>
+        <h2>Hecha para aprender.</h2>
+        <p class="muted">Un prototipo para practicar desarrollo móvil, modelado de datos y sistemas distribuidos a partir de un problema local.</p>
+      </div>
+      <div class="stack">
+        <span>React Native · Expo</span><span>TypeScript</span><span>Supabase · Postgres + PostGIS</span><span>Realtime</span><span>SQLite offline-first</span><span>TanStack Query</span><span>Apple Maps · Google Maps</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div class="card">
+        <h2>Pruébala ahora.</h2>
+        <p>Disponible para Android. No procesa pagos ni requiere tarjeta.</p>
+        <a class="btn" href="https://github.com/ZaphCode/echo-service-marketplace/releases/latest/download/echo.apk">Descargar para Android</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Echo es un proyecto universitario con fines educativos, no una app en producción.</p>
+    <p><a href="https://github.com/ZaphCode/echo-service-marketplace">Código fuente en GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent)) document.documentElement.classList.add("is-ios");
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo · Código QR para imprimir</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/icon.png">
+<style>
+@font-face { font-family: Geist; src: url(fonts/Geist-Regular.ttf); font-weight: 400; }
+@font-face { font-family: Geist; src: url(fonts/Geist-Bold.ttf); font-weight: 700; }
+@page { size: letter portrait; margin: 14mm; }
+* { box-sizing: border-box; margin: 0; }
+body { background: #fff; color: #0F1115; font: 400 18px/1.45 Geist, system-ui, sans-serif; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.sheet { width: min(640px, 100%); display: grid; justify-items: center; gap: 26px; text-align: center; }
+.logo { width: 260px; height: auto; }
+h1 { font-size: clamp(1.8rem, 6vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; text-wrap: balance; }
+p { color: #4C525C; max-width: 30ch; }
+.qr { width: min(420px, 82vw); height: auto; border: 3px solid #0F1115; border-radius: 28px; padding: 14px; }
+.badge { font-weight: 700; font-size: 1.25rem; color: #0F1115; }
+.url { font-size: .95rem; color: #626873; word-break: break-all; }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <img class="logo" src="img/echo-black.png" alt="Echo" width="560" height="198">
+    <h1>Escanea y prueba la app</h1>
+    <img class="qr" src="img/qr.svg" alt="Código QR hacia la página de Echo" width="420" height="420">
+    <span class="badge">Descarga para Android</span>
+    <p>Servicios técnicos y del hogar en Baja California Sur, a un mensaje de distancia.</p>
+    <span class="url">zaphcode.github.io/echo-service-marketplace</span>
+  </div>
+</body>
+</html>
