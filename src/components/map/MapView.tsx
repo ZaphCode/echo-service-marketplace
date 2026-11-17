@@ -1,8 +1,17 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Platform, StyleProp, ViewStyle } from "react-native";
+import { ImageRef } from "expo-image";
 import { AppleMaps, CameraMoveEvent, GoogleMaps } from "expo-maps";
 
 import { Coords } from "@/utils/geo";
+import { loadMarkerIcon } from "./markerIcon";
 
 export type MapMarker = {
   id: string;
@@ -57,6 +66,51 @@ const fromCameraEvent = (event: CameraMoveEvent): MapRegion | null => {
   };
 };
 
+/**
+ * Android only: Google Maps can't show a text label beside a marker, so each
+ * marker gets a custom icon with its title baked in (like Apple Maps shows).
+ * Returns a map of marker id -> icon (`null` = failed, use the default pin).
+ * Markers without an entry are still loading.
+ */
+function useMarkerIcons(
+  markers: MapMarker[],
+  color: string,
+  enabled: boolean
+): Record<string, ImageRef | null> {
+  const [icons, setIcons] = useState<Record<string, ImageRef | null>>({});
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+
+    markers.forEach((marker) => {
+      loadMarkerIcon(marker.title ?? "", color).then((icon) => {
+        if (cancelled) return;
+        setIcons((prev) => {
+          const key = iconKey(marker, color);
+          return prev[key] === icon ? prev : { ...prev, [key]: icon };
+        });
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [markers, color, enabled]);
+
+  return useMemo(() => {
+    const byId: Record<string, ImageRef | null> = {};
+    markers.forEach((marker) => {
+      const key = iconKey(marker, color);
+      if (key in icons) byId[marker.id] = icons[key];
+    });
+    return byId;
+  }, [icons, markers, color]);
+}
+
+const iconKey = (marker: MapMarker, color: string) =>
+  `${color}|${marker.title ?? ""}`;
+
 /** Thin cross-platform wrapper: Apple Maps on iOS, Google Maps on Android. */
 const MapView = forwardRef<MapViewHandle, Props>(function MapView(
   {
@@ -76,6 +130,11 @@ const MapView = forwardRef<MapViewHandle, Props>(function MapView(
 ) {
   const appleRef = useRef<AppleMaps.MapView>(null);
   const googleRef = useRef<GoogleMaps.MapView>(null);
+  const markerIcons = useMarkerIcons(
+    markers,
+    accentColor,
+    Platform.OS === "android"
+  );
 
   useImperativeHandle(ref, () => ({
     moveTo: (coords, zoom) => {
@@ -148,12 +207,17 @@ const MapView = forwardRef<MapViewHandle, Props>(function MapView(
         mapToolbarEnabled: false,
         zoomControlsEnabled: false,
       }}
-      markers={markers.map((marker) => ({
-        id: marker.id,
-        coordinates: toNative(marker.coords),
-        title: marker.title,
-        showCallout: false,
-      }))}
+      markers={markers
+        // Hold back markers whose label icon is still loading so the default
+        // red pin doesn't flash before the labelled one.
+        .filter((marker) => marker.id in markerIcons)
+        .map((marker) => ({
+          id: marker.id,
+          coordinates: toNative(marker.coords),
+          title: marker.title,
+          showCallout: false,
+          icon: markerIcons[marker.id] ?? undefined,
+        }))}
       circles={circles.map((circle) => ({
         id: circle.id,
         center: toNative(circle.center),

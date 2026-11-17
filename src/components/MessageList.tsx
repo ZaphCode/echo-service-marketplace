@@ -117,15 +117,6 @@ export default function MessageList({ requestId }: Props) {
     [],
   );
 
-  const renderEmptyComponent = useCallback(
-    () => (
-      <View style={styles.invertedListPlaceholder}>
-        {showInitialSyncLoader ? <LoadingMessages /> : <EmptyMessages />}
-      </View>
-    ),
-    [showInitialSyncLoader],
-  );
-
   if (messagesQuery.isPending) return <Loader />;
 
   if (messagesQuery.isError) {
@@ -139,6 +130,17 @@ export default function MessageList({ requestId }: Props) {
     );
   }
 
+  // Render the placeholder outside the inverted FlatList. Inside an inverted
+  // list, ListEmptyComponent gets flipped differently on iOS vs Android
+  // (text appeared upside down on Android), so we avoid depending on it.
+  if (messagesForList.length === 0) {
+    return (
+      <View style={styles.placeholder}>
+        {showInitialSyncLoader ? <LoadingMessages /> : <EmptyMessages />}
+      </View>
+    );
+  }
+
   return (
     <FlatList
       ref={flatListRef}
@@ -148,7 +150,6 @@ export default function MessageList({ requestId }: Props) {
       showsVerticalScrollIndicator={false}
       renderItem={renderMessage}
       extraData={isOnline}
-      ListEmptyComponent={renderEmptyComponent}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       onScroll={handleScroll}
@@ -179,9 +180,8 @@ function EmptyMessages() {
 }
 
 const styles = StyleSheet.create({
-  invertedListPlaceholder: {
+  placeholder: {
     flex: 1,
     justifyContent: "center",
-    transform: [{ scaleY: -1 }],
   },
 });
