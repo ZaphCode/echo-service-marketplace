@@ -100,6 +100,8 @@ button {
 .page {
   width: min(1080px, 100%);
   margin: 0 auto;
+  /* minmax(0, …): un texto largo no ensancha la columna más allá de la pantalla. */
+  grid-template-columns: minmax(0, 1fr);
   padding: var(--space-5) var(--gutter) calc(var(--nav-height) + var(--space-8) + env(safe-area-inset-bottom));
   display: grid;
   gap: var(--space-6);

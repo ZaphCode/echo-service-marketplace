@@ -1,5 +1,6 @@
 .feed {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
 }
 
@@ -48,6 +49,7 @@
 
 .feed-who {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   flex: 1;
   min-width: 0;
   line-height: 1.3;
@@ -149,6 +151,7 @@
 
 .request-main {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   flex: 1;
   min-width: 0;
   gap: 2px;
