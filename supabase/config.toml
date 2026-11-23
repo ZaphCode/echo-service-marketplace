@@ -32,3 +32,7 @@ enable_signup = true
 enable_signup = true
 # Local accounts work right away, without a confirmation email.
 enable_confirmations = false
+
+# PWA (web/): la llaman los triggers de notification y message con un secreto compartido.
+[functions.web-push]
+verify_jwt = false
