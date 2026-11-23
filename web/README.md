@@ -1,8 +1,8 @@
 # Echo PWA
 
 Versión web progresiva de Echo, la app de servicios del hogar en Baja California Sur. Usa el mismo
-backend de Supabase que la app móvil (mismas tablas, RLS y datos), así que una solicitud creada en la
-PWA aparece en la app y al revés.
+esquema de Supabase y las mismas reglas que la app móvil (tablas, RLS, consultas, negociación y
+notificaciones), sobre un proyecto de Supabase creado con las migraciones y el seed de este repositorio.
 
 Publicada en <https://zaphcode.github.io/echo-service-marketplace/app/>.
 
