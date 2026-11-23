@@ -1,5 +1,6 @@
 import { supabase, throwIfError } from "../lib/supabase";
 import type { Coords, ProfileDetails, Role, User } from "./models";
+import { compressImage } from "../utils/images";
 
 // Perfiles y registro: mismo flujo que la app móvil (src/hooks/useRegister.ts, src/api/profiles.ts).
 const clientProfileSelect = "*, user_profile:profiles!user(*)";
@@ -92,7 +93,8 @@ export async function updateProviderInfo(rowId: string, info: ProviderInput) {
   throwIfError(error);
 }
 
-export async function updateAvatar(userId: string, file: File): Promise<string> {
+export async function updateAvatar(userId: string, original: File): Promise<string> {
+  const file = await compressImage(original);
   const ext = /png$/i.test(file.type) ? "png" : /webp$/i.test(file.type) ? "webp" : "jpg";
   const path = `${userId}/avatar_${Date.now()}.${ext}`;
   const { error } = await supabase.storage.from("avatars").upload(path, file, { contentType: file.type, upsert: true });

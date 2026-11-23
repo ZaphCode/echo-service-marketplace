@@ -1,4 +1,5 @@
 import { supabase, throwIfError } from "../lib/supabase";
+import { compressImage } from "../utils/images";
 import type {
   Category,
   Contracting,
@@ -112,11 +113,12 @@ export type ServiceInput = {
 /** Sube las fotos nuevas a service-photos/<uid>/… y conserva las rutas existentes. */
 async function uploadPhotos(ownerId: string, prefix: "service" | "contracting", photos: (string | File)[]) {
   const paths: string[] = [];
-  for (const [index, photo] of photos.entries()) {
-    if (typeof photo === "string") {
-      paths.push(photo);
+  for (const [index, original] of photos.entries()) {
+    if (typeof original === "string") {
+      paths.push(original);
       continue;
     }
+    const photo = await compressImage(original);
     const ext = /png$/i.test(photo.type) ? "png" : /webp$/i.test(photo.type) ? "webp" : "jpg";
     const path = `${ownerId}/${prefix}_${Date.now()}_${index}.${ext}`;
     const { error } = await supabase.storage

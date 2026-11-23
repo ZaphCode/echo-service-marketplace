@@ -88,13 +88,12 @@ export default function Home() {
 
       <section className="section" aria-labelledby="categorias">
         <h2 id="categorias">Categorías</h2>
-        <div className="categories" role="list">
+        <div className="categories" role="group" aria-label="Filtrar por categoría">
           {[{ id: "all", name: "Todas" }, ...(categories.data ?? [])].map((item) => {
             const photo = item.id === "all" ? undefined : categoryPhoto(item.name);
             return (
               <button
                 key={item.id}
-                role="listitem"
                 type="button"
                 className="category"
                 aria-pressed={category === item.id}
