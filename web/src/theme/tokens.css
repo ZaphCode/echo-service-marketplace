@@ -1,0 +1,110 @@
+/* Tokens de diseño de Echo: los mismos valores que src/theme/theme.ts de la app móvil. */
+@font-face {
+  font-family: Geist;
+  src: url("/fonts/Geist-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Geist;
+  src: url("/fonts/Geist-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #0e0f11;
+  --surface: #18191c;
+  --surface-2: #222327;
+  --surface-3: #2c2e33;
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --text: #f4f5f7;
+  --text-muted: #a9acb3;
+  --text-subtle: #868a92;
+  --accent: #3e8cfd;
+  --accent-text: #7db3ff;
+  --accent-soft: rgba(62, 140, 253, 0.16);
+  --accent-glow: rgba(62, 140, 253, 0.45);
+  --on-accent: #ffffff;
+  --success: #3dd598;
+  --success-soft: rgba(61, 213, 152, 0.14);
+  --danger: #ff7a6e;
+  --danger-soft: rgba(255, 122, 110, 0.14);
+  --done: #bc98ff;
+  --done-soft: rgba(188, 152, 255, 0.14);
+  --warn: #f2b544;
+  --warn-soft: rgba(242, 181, 68, 0.14);
+  --star: #ffc94d;
+  --scrim: rgba(0, 0, 0, 0.6);
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --gutter: 20px;
+  --nav-height: 72px;
+  --font: Geist, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f2f3f6;
+    --surface: #ffffff;
+    --surface-2: #ebedf1;
+    --surface-3: #dfe2e8;
+    --line: rgba(15, 17, 21, 0.08);
+    --line-strong: rgba(15, 17, 21, 0.16);
+    --text: #0f1115;
+    --text-muted: #4c525c;
+    --text-subtle: #626873;
+    --accent-text: #1a66d6;
+    --accent-soft: rgba(62, 140, 253, 0.12);
+    --accent-glow: rgba(62, 140, 253, 0.35);
+    --success: #047857;
+    --success-soft: rgba(4, 120, 87, 0.1);
+    --danger: #c2372b;
+    --danger-soft: rgba(194, 55, 43, 0.1);
+    --done: #6a3fd4;
+    --done-soft: rgba(106, 63, 212, 0.1);
+    --warn: #8a5a0b;
+    --warn-soft: rgba(138, 90, 11, 0.1);
+    --star: #e8a400;
+    --scrim: rgba(15, 17, 21, 0.45);
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f2f3f6;
+  --surface: #ffffff;
+  --surface-2: #ebedf1;
+  --surface-3: #dfe2e8;
+  --line: rgba(15, 17, 21, 0.08);
+  --line-strong: rgba(15, 17, 21, 0.16);
+  --text: #0f1115;
+  --text-muted: #4c525c;
+  --text-subtle: #626873;
+  --accent-text: #1a66d6;
+  --accent-soft: rgba(62, 140, 253, 0.12);
+  --accent-glow: rgba(62, 140, 253, 0.35);
+  --success: #047857;
+  --success-soft: rgba(4, 120, 87, 0.1);
+  --danger: #c2372b;
+  --danger-soft: rgba(194, 55, 43, 0.1);
+  --done: #6a3fd4;
+  --done-soft: rgba(106, 63, 212, 0.1);
+  --warn: #8a5a0b;
+  --warn-soft: rgba(138, 90, 11, 0.1);
+  --star: #e8a400;
+  --scrim: rgba(15, 17, 21, 0.45);
+}

@@ -1,0 +1,152 @@
+.profile-header {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.profile-avatar {
+  position: relative;
+  margin-bottom: var(--space-2);
+}
+
+.avatar-edit {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: min(420px, 100%);
+  margin: var(--space-3) 0 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.stats > div {
+  padding: var(--space-3);
+}
+
+.stats > div + div {
+  border-left: 1px solid var(--line);
+}
+
+.stats dt {
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+}
+
+.stats dd {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.info-grid > div {
+  display: grid;
+  gap: 2px;
+}
+
+.info-grid .subtle {
+  font-size: 0.82rem;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.day-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.day-chips span {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--text-subtle);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.day-chips span.on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.review-panel {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.review-panel > li {
+  padding: var(--space-4) 0;
+}
+
+.settings {
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.setting {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.setting + .setting {
+  border-top: 1px solid var(--line);
+}
+
+.setting > svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.setting > span {
+  flex: 1;
+}
+
+.setting select {
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+}
+
+.setting.danger {
+  color: var(--danger);
+}
+
+.setting.danger > svg {
+  color: var(--danger);
+}

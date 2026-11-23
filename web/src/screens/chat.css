@@ -1,0 +1,234 @@
+.chat {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: min(760px, 100%);
+  height: calc(100dvh - var(--nav-height) - var(--space-5) - env(safe-area-inset-bottom));
+  margin: 0 auto;
+  padding: var(--space-4) var(--gutter) 0;
+}
+
+@media (min-width: 960px) {
+  .chat {
+    height: 100dvh;
+    padding-bottom: var(--space-4);
+  }
+}
+
+.chat-top {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.negotiation {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.negotiation-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.negotiation-top .subtle {
+  font-size: 0.82rem;
+}
+
+.negotiation-offer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.negotiation-offer strong {
+  font-size: 1.9rem;
+  letter-spacing: -0.02em;
+}
+
+.negotiation-offer .muted {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.parties {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--text-subtle);
+}
+
+.party {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.party.end {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.party > div {
+  display: grid;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.party strong {
+  color: var(--text);
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.party-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.party-label[data-tone="success"] {
+  color: var(--success);
+}
+
+.party-label[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.party-label[data-tone="done"] {
+  color: var(--done);
+}
+
+.party-label[data-tone="accent"] {
+  color: var(--accent-text);
+}
+
+.negotiation-notes {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.negotiation-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.negotiation-actions.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.negotiation-actions .btn {
+  padding: 0 var(--space-2);
+}
+
+.center {
+  text-align: center;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  padding: var(--space-4) 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin: auto;
+  max-width: 32ch;
+  text-align: center;
+}
+
+.bubble {
+  align-self: flex-start;
+  max-width: min(78%, 520px);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 18px 18px 18px 6px;
+  background: var(--surface-2);
+}
+
+.bubble.mine {
+  align-self: flex-end;
+  border-radius: 18px 18px 6px 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.bubble.pending {
+  opacity: 0.7;
+}
+
+.bubble p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+
+.composer {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3) 0 var(--space-4);
+}
+
+.composer .input {
+  border-radius: var(--radius-pill);
+}
+
+.send {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.send:disabled {
+  background: var(--surface-2);
+  color: var(--text-subtle);
+}
+
+.star-picker {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.star-picker button {
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--surface-3);
+}
+
+.star-picker button.on {
+  color: var(--star);
+}

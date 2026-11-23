@@ -1,0 +1,47 @@
+.sheet {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92dvh;
+  margin: auto auto 0;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.sheet::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(2px);
+}
+
+.sheet[open] {
+  animation: sheet-in 0.22s ease-out;
+}
+
+@media (min-width: 640px) {
+  .sheet {
+    margin: auto;
+    border-radius: var(--radius-lg);
+  }
+}
+
+.sheet-body {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--gutter) calc(var(--space-6) + env(safe-area-inset-bottom));
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}

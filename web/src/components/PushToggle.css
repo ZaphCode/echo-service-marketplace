@@ -1,0 +1,23 @@
+.push-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.push-card > svg {
+  flex-shrink: 0;
+  color: var(--accent-text);
+}
+
+.push-card > div,
+.push-card > p {
+  flex: 1;
+}
+
+.push-card p {
+  font-size: 0.88rem;
+}

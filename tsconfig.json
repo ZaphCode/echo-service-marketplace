@@ -6,5 +6,6 @@
       "@/*": ["./src/*"],
       "@Assets/*": ["./assets/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "web", "supabase/functions"]
 }
