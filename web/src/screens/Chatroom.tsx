@@ -308,13 +308,11 @@ export default function Chatroom() {
               <p className="subtle center">Trabajo finalizado{reviewed.data ? " · ya dejaste tu valoración" : ""}.</p>
             ) : null
           ) : buttons.showCompletion ? (
-            <div className="negotiation-actions two">
-              <button className="btn btn-danger" type="button" onClick={reject} disabled={busy}>
-                Cancelar
+            <div className="negotiation-done">
+              <button className="btn btn-primary btn-block" type="button" onClick={complete} disabled={busy || !buttons.canComplete}>
+                {buttons.canComplete ? "Marcar como completado" : `Esperando a que ${firstName(other.name)} confirme`}
               </button>
-              <button className="btn btn-primary" type="button" onClick={complete} disabled={busy || !buttons.canComplete}>
-                {buttons.canComplete ? "Completar" : "Esperando"}
-              </button>
+              <p className="subtle center">El trabajo se cierra cuando ambos lo marcan; después pueden valorarse.</p>
             </div>
           ) : (
             <div className="negotiation-actions">

@@ -17,6 +17,15 @@ type AuthState = {
 const AuthContext = createContext<AuthState | null>(null);
 const EPOCH_KEY = "echo.dataEpoch";
 
+function readCachedUser(userId: string): User | null {
+  try {
+    const cached = JSON.parse(localStorage.getItem("echo.user") ?? "null") as User | null;
+    return cached?.id === userId ? cached : null;
+  } catch {
+    return null;
+  }
+}
+
 /** El Service Worker no lee localStorage: se le deja el token vigente en IndexedDB para Background Sync. */
 function mirrorSession(session: Session | null) {
   void saveSession(
@@ -55,14 +64,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setStatus("signed-out");
       return;
     }
+    // La app abre de inmediato con el último perfil guardado (también sin conexión) y lo actualiza
+    // en segundo plano; solo se espera a la red la primera vez en este dispositivo.
+    const cached = readCachedUser(current.user.id);
+    if (cached) {
+      setUser(cached);
+      setStatus("signed-in");
+    }
     try {
       const profile = await getProfile(current.user.id);
       setUser(profile);
       localStorage.setItem("echo.user", JSON.stringify(profile));
     } catch {
-      // Sin conexión: se usa el último perfil conocido para que la app abra offline.
-      const cached = localStorage.getItem("echo.user");
-      setUser(cached ? (JSON.parse(cached) as User) : null);
+      if (!cached) setUser(null);
     }
     setStatus("signed-in");
   }, []);
@@ -72,16 +86,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (async () => {
       const { data } = await supabase.auth.getSession();
       if (!active) return;
-      if (data.session && !(await checkDataEpoch())) {
-        await supabase.auth.signOut({ scope: "local" });
-        setSession(null);
-        mirrorSession(null);
-        await loadUser(null);
-        return;
-      }
       setSession(data.session);
       mirrorSession(data.session);
       await loadUser(data.session);
+      // Se revisa después de abrir, sin bloquear el arranque. Si el seed se reinició, los usuarios se
+      // recrearon y la sesión guardada ya no sirve: se cierra solo en este dispositivo.
+      if (data.session && !(await checkDataEpoch())) {
+        await supabase.auth.signOut({ scope: "local" });
+        localStorage.removeItem("echo.user");
+        queryClient.clear();
+      }
     })();
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, next) => {
@@ -97,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       active = false;
       listener.subscription.unsubscribe();
     };
-  }, [loadUser]);
+  }, [loadUser, queryClient]);
 
   const value = useMemo<AuthState>(
     () => ({

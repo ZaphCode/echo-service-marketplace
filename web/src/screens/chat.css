@@ -232,3 +232,12 @@
 .star-picker button.on {
   color: var(--star);
 }
+
+.negotiation-done {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.negotiation-done .subtle {
+  font-size: 0.82rem;
+}
