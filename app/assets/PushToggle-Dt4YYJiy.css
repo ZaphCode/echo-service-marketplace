@@ -1,0 +1,1 @@
+.push-card{align-items:center;gap:var(--space-3);padding:var(--space-4);border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);display:flex}.push-card>svg{color:var(--accent-text);flex-shrink:0}.push-card>div,.push-card>p{flex:1}.push-card p{font-size:.88rem}
