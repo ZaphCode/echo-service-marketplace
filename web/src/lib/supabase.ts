@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { config } from "../config";
 
-// Mismo proyecto y mismas tablas que la app móvil. La sesión vive en localStorage (sb-<ref>-auth-token).
+// Mismo esquema y mismas reglas que la app móvil, en el proyecto de Supabase de la PWA. La sesión vive en localStorage (sb-<ref>-auth-token).
 export const supabase = createClient(config.supabaseUrl, config.supabaseKey, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 });
