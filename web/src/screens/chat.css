@@ -166,7 +166,7 @@
 .bubble.mine {
   align-self: flex-end;
   border-radius: 18px 18px 6px 18px;
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
 }
 
@@ -207,7 +207,7 @@
   height: 52px;
   border: 0;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
 }
 

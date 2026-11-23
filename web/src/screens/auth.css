@@ -82,7 +82,7 @@
 }
 
 .steps span.done {
-  background: var(--accent);
+  background: var(--accent-fill);
 }
 
 .days {
@@ -103,6 +103,6 @@
 
 .day[aria-pressed="true"] {
   border-color: var(--accent);
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
 }

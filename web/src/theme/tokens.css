@@ -24,6 +24,8 @@
   --text-muted: #a9acb3;
   --text-subtle: #868a92;
   --accent: #3e8cfd;
+  /* Relleno de botones y burbujas con texto blanco: más oscuro que el azul de marca para cumplir WCAG AA (4.8:1). */
+  --accent-fill: #2b6fdb;
   --accent-text: #7db3ff;
   --accent-soft: rgba(62, 140, 253, 0.16);
   --accent-glow: rgba(62, 140, 253, 0.45);

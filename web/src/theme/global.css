@@ -149,7 +149,7 @@ button {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
   box-shadow: 0 8px 24px -10px var(--accent-glow);
 }

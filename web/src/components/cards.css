@@ -178,7 +178,7 @@
   min-width: 22px;
   padding: 0 6px;
   border-radius: var(--radius-pill);
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
   font-size: 0.75rem;
   line-height: 22px;

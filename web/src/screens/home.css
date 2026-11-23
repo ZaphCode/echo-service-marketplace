@@ -128,7 +128,7 @@
 }
 
 .category:first-child {
-  background: var(--accent);
+  background: var(--accent-fill);
 }
 
 .category:first-child::after {
@@ -160,7 +160,7 @@
 }
 
 .segmented button[aria-selected="true"] {
-  background: var(--accent);
+  background: var(--accent-fill);
   color: var(--on-accent);
 }
 
